@@ -1,36 +1,20 @@
-# Introduction
+# 复现问题
 
-This is a skeleton application using the Hyperf framework. This application is meant to be used as a starting place for those looking to get their feet wet with Hyperf Framework.
+## 背景
 
-# Requirements
+1. 使用 phpdbg 跑单元测试
+2. 使用 phpdbg 收集单元测试覆盖率
 
-Hyperf has some requirements for the system environment, it can only run under Linux and Mac environment, but due to the development of Docker virtualization technology, Docker for Windows can also be used as the running environment under Windows.
+## 命令
 
-The various versions of Dockerfile have been prepared for you in the [hyperf\hyperf-docker](https://github.com/hyperf/hyperf-docker) project, or directly based on the already built [hyperf\hyperf](https://hub.docker.com/r/hyperf/hyperf) Image to run.
+```bash
+composer run dbg
 
-When you don't want to use Docker as the basis for your running environment, you need to make sure that your operating environment meets the following requirements:  
+composer run dbg-coverage
+```
 
- - PHP >= 7.2
- - Swoole PHP extension >= 4.4，and Disabled `Short Name`
- - OpenSSL PHP extension
- - JSON PHP extension
- - PDO PHP extension （If you need to use MySQL Client）
- - Redis PHP extension （If you need to use Redis Client）
- - Protobuf PHP extension （If you need to use gRPC Server of Client）
+## 现象
 
-# Installation using Composer
-
-The easiest way to create a new Hyperf project is to use Composer. If you don't have it already installed, then please install as per the documentation.
-
-To create your new Hyperf project:
-
-$ composer create-project hyperf/hyperf-skeleton path/to/install
-
-Once installed, you can run the server immediately using the command below.
-
-$ cd path/to/install
-$ php bin/hyperf.php start
-
-This will start the cli-server on port `9501`, and bind it to all network interfaces. You can then visit the site at `http://localhost:9501/`
-
-which will bring up Hyperf default home page.
+如果启用  `--coverage-text` 等收集单元测试覆盖率的参数之后，会出现自动加载异常的情况。
+即 `App\Service\TestService` 类应该加载 `runtime/container/proxy/App_Controller_AbstractController.proxy.php` 文件
+但是实际情况是 加载了 `app/Service/TestService.php` 文件。 
